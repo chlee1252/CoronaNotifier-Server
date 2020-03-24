@@ -29,8 +29,6 @@ sched.start()
 
 @app.route('/')
 def main():
-  # getCData()
-  # getSData()
   return "Welcome to CoronaNotifier API"
   
 @app.route('/getCounty/<stateName>/<countyName>', methods=['GET'])
