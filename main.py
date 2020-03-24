@@ -19,13 +19,13 @@ date = datetime.today()
 newdate = date.replace(hour=15, minute=2, second=10)
 
 @cache.cached(timeout=0, key_prefix='county')
-@sched.scheduled_job('interval', hour=1, next_run_time=newdate)
+@sched.scheduled_job('interval', hours=1, next_run_time=newdate)
 def getCData():
   cache.clear()
   return getCountyData()
 
 @cache.cached(timeout=0, key_prefix='state')
-@sched.scheduled_job('interval', hour=1, next_run_time=newdate)
+@sched.scheduled_job('interval', hours=1, next_run_time=newdate)
 def getSData():
   cache.clear()
   return getStateData()
