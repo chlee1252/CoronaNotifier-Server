@@ -1,7 +1,9 @@
 import os
 import atexit
 
+from pytz import utc
 from flask import Flask, jsonify
+from datetime import datetime
 from flask_caching import Cache
 from apscheduler.schedulers.background import BackgroundScheduler
 from county.county import getCountyData
@@ -12,20 +14,21 @@ app = Flask(__name__)
 cache = Cache()
 config(app, cache)
 
+sched = BackgroundScheduler(timezone=utf)
+date = datetime.today()
+newdate = date.replace(hour=15, minute=2, second=10)
+
 @cache.cached(timeout=0, key_prefix='county')
+@sched.scheduled_job('interval', hour=1, next_run_time=newdate)
 def getCData():
   cache.clear()
   return getCountyData()
 
 @cache.cached(timeout=0, key_prefix='state')
+@sched.scheduled_job('interval', hour=1, next_run_time=newdate)
 def getSData():
   cache.clear()
   return getStateData()
-
-sched = BackgroundScheduler(daemon=True)
-sched.add_job(getCData,'interval', hours=1)
-sched.add_job(getSData,'interval', hours=1)
-sched.start()
 
 @app.route('/')
 def main():
@@ -46,7 +49,7 @@ def getState():
   return jsonify(cache.get('state'))
 
 
-atexit.register(lambda: sched.shutdown(wait=False))
+# atexit.register(lambda: sched.shutdown(wait=False))
 
 if __name__=="__main__":
   port = int(os.environ.get('PORT', 5500))
