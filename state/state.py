@@ -2,7 +2,7 @@ import requests
 import csv
 from datetime import datetime
 
-from stateName import createBaseDict, states
+from stateName.stateName import createBaseDict, states
 
 def getStateData():
   base_url = 'https://facts.csbs.org/covid-19/covid19_state.csv'
