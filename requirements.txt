@@ -1,0 +1,8 @@
+requests[security]
+python-csv
+flask
+gunicorn
+Flask-Caching==1.4.0
+pylibmc==1.5.2
+Werkzeug==0.16.0
+apscheduler
