@@ -14,7 +14,7 @@ app = Flask(__name__)
 cache = Cache()
 config(app, cache)
 
-sched = BackgroundScheduler(timezone=utf)
+sched = BackgroundScheduler(timezone=utc)
 date = datetime.today()
 newdate = date.replace(hour=15, minute=2, second=10)
 
