@@ -14,10 +14,12 @@ config(app, cache)
 
 @cache.cached(timeout=0, key_prefix='county')
 def getCData():
+  cache.clear()
   return getCountyData()
 
 @cache.cached(timeout=0, key_prefix='state')
 def getSData():
+  cache.clear()
   return getStateData()
 
 sched = BackgroundScheduler(daemon=True)
