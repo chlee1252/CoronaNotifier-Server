@@ -6,7 +6,7 @@ from .statename import createBaseDict, states
 
 def getStateData():
   base_url = 'https://facts.csbs.org/covid-19/covid19_state.csv'
-  result = createBaseDict()
+  result = []
 
   request = requests.get(base_url)
   if request.status_code != 200:
@@ -14,6 +14,11 @@ def getStateData():
 
   text = request.text
   data = list(csv.DictReader(text.splitlines()))
+  total_confirmed = 0
+  total_newConfirmed = 0
+  total_Deaths = 0
+  total_newDeaths = 0
+  lastTotal = None
 
   for item in data:
     state = item['State Name']
@@ -22,15 +27,36 @@ def getStateData():
       continue
     
     last_update = ' '.join(item['Last Update'].split(' ')[0:2])
-
+    confirm = int(item['Confirmed'])
+    newConfirm = int(item['New'])
+    deaths = int(item['Death'])
+    newDeaths = int(item['New Death'])
+    last = datetime.strptime(last_update, '%Y-%m-%d %H:%M').isoformat() + 'EDT'
     obj = {
-      'Confirmed': int(item['Confirmed']),
-      'New Confirmed': int(item['New']),
-      'Deaths': int(item['Death']),
-      'New Death': int(item['New Death']),
-      'Last Update': datetime.strptime(last_update, '%Y-%m-%d %H:%M').isoformat() + 'EDT',
+      'state': state,
+      'Confirmed': confirm,
+      'New Confirmed': newConfirm,
+      'Deaths': deaths,
+      'New Death': newDeaths,
+      'Last Update': last,
     }
+    total_confirmed += confirm
+    total_newConfirmed += newConfirm
+    total_Deaths += deaths
+    total_newDeaths += newDeaths
+    lastTotal = last
 
-    result[state] = obj
+    result.append(obj)
+  
+  total_obj = {
+      'state': 'US(Mainland)',
+      'Confirmed': total_confirmed,
+      'New Confirmed': total_newConfirmed,
+      'Deaths': total_Deaths,
+      'New Death': total_newDeaths,
+      'Last Update': lastTotal,
+    }
+  result.insert(0, total_obj)
+
 
   return result
