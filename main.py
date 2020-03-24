@@ -12,17 +12,17 @@ app = Flask(__name__)
 cache = Cache()
 config(app, cache)
 
-@cache.cached(timeout=5, key_prefix='county')
+@cache.cached(timeout=10, key_prefix='county')
 def getCData():
-  return 1
+  return getCountyData()
 
-@cache.cached(timeout=5, key_prefix='state')
+@cache.cached(timeout=10, key_prefix='state')
 def getSData():
-  return 2
+  return getStateData()
 
 sched = BackgroundScheduler(daemon=True)
-sched.add_job(getCData,'interval', seconds=10)
-sched.add_job(getSData,'interval', seconds=10)
+sched.add_job(getCData,'interval', seconds=20)
+sched.add_job(getSData,'interval', seconds=20)
 sched.start()
 
 @app.route('/')
@@ -33,12 +33,17 @@ def main():
   
 @app.route('/getCounty/<stateName>/<countyName>', methods=['GET'])
 def getCounty(stateName, countyName):
-  # data = cache.get('county')[stateName][countyName]
-  return cache.get('county')
+  if not cache.get('county'):
+    getCData()
+  data = cache.get('county')[stateName][countyName]
+  return jsonify(data)
 
 @app.route('/getState', methods=['GET'])
 def getState():
-  return cache.get('state')
+  if not cache.get('state'):
+    getSData()
+
+  return jsonify(cache.get('state'))
 
 atexit.register(lambda: sched.shutdown(wait=False))
 

@@ -5,10 +5,8 @@ import csv
 from datetime import datetime
 
 sys.path.append("..")
-# from main import cache
 from state.statename import createBaseDict, states
 
-# @cache.cached(timeout=0, key_prefix='county')
 def getCountyData():
   base_url = 'https://facts.csbs.org/covid-19/covid19_county.csv'
   result = createBaseDict()
@@ -30,6 +28,7 @@ def getCountyData():
     last_update = ' '.join(item['Last Update'].split(' ')[0:2])
 
     obj = {
+      'County': county,
       'Confirmed': int(item['Confirmed']),
       'New Confirmed': int(item['New']),
       'Deaths': int(item['Death']),
