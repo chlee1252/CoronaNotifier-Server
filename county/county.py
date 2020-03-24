@@ -6,7 +6,7 @@ from datetime import datetime
 
 sys.path.append("..")
 # from main import cache
-from state.stateName.stateName import createBaseDict
+from state.statename import createBaseDict, states
 
 # @cache.cached(timeout=0, key_prefix='county')
 def getCountyData():
