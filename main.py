@@ -16,7 +16,7 @@ config(app, cache)
 
 sched = BackgroundScheduler(timezone=utc)
 date = datetime.today()
-newdate = date.replace(hour=15, minute=2, second=10)
+newdate = date.replace(hour=2, minute=2, second=10)
 
 @cache.cached(timeout=0, key_prefix='county')
 @sched.scheduled_job('interval', hours=1, next_run_time=newdate)
@@ -32,6 +32,8 @@ def getSData():
 
 @app.route('/')
 def main():
+  getCData()
+  getSData()
   return "Welcome to CoronaNotifier API"
   
 @app.route('/getCounty/<stateName>/<countyName>', methods=['GET'])
