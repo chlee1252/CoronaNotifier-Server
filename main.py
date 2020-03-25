@@ -50,6 +50,10 @@ def getState():
 
   return jsonify(cache.get('state'))
 
+@app.route('/clearCache')
+def clearCache():
+  cache.clear()
+  return "Done"
 
 # atexit.register(lambda: sched.shutdown(wait=False))
 
