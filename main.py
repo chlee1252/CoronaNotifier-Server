@@ -60,6 +60,10 @@ def clearCache():
   cache.clear()
   return "Done"
 
+@app.route('/getCache')
+def getCache():
+  return cache.get('state')
+
 # atexit.register(lambda: sched.shutdown(wait=False))
 
 if __name__=="__main__":
