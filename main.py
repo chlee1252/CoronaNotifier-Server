@@ -16,16 +16,16 @@ config(app, cache)
 
 sched = BackgroundScheduler(timezone=utc)
 date = datetime.today()
-newdate = date.replace(hour=2, minute=2, second=10)
+newdate = date.replace(hour=15, minute=30, second=0)
 
 @cache.cached(timeout=0, key_prefix='county')
-@sched.scheduled_job('interval', hours=1, next_run_time=newdate)
+@sched.scheduled_job('interval', minutes=15, next_run_time=newdate)
 def getCData():
   cache.clear()
   return getCountyData()
 
 @cache.cached(timeout=0, key_prefix='state')
-@sched.scheduled_job('interval', hours=1, next_run_time=newdate)
+@sched.scheduled_job('interval', minutes=15, next_run_time=newdate)
 def getSData():
   cache.clear()
   return getStateData()
@@ -49,6 +49,11 @@ def getState():
     getSData()
 
   return jsonify(cache.get('state'))
+
+@app.route('/getTimeHistory/<stateName>/<countyName>', methods=['GET'])
+def getTimeHistory(stateName, countyName):
+  return "This is TimeHistory Panel: Not Implemented."
+
 
 @app.route('/clearCache')
 def clearCache():
