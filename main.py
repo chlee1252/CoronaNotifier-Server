@@ -58,6 +58,11 @@ def getState():
 def getTimeHistory(stateName, countyName):
   return "This is TimeHistory Panel: Not Implemented."
 
+@app.route('/getStateDetail/<stateName>')
+def getStateDetail(stateName):
+    if not cache.get('county'):
+      getCData()
+    return jsonify(cache.get('county')[stateName])
 
 @app.route('/clearCache')
 def clearCache():
