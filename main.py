@@ -3,9 +3,9 @@ import atexit
 
 from pytz import utc
 from flask import Flask, jsonify
-from datetime import datetime
+# from datetime import datetime
 from flask_caching import Cache
-from apscheduler.schedulers.background import BackgroundScheduler
+# from apscheduler.schedulers.background import BackgroundScheduler
 from county.county import getCountyData
 from cache.cacheConfig import config
 from state.state import getStateData
@@ -17,19 +17,19 @@ app = Flask(__name__)
 cache = Cache()
 config(app, cache)
 
-sched = BackgroundScheduler(timezone=utc)
-date = datetime.today()
-newdate = date.replace(hour=2, minute=2, second=0)
+# sched = BackgroundScheduler(timezone=utc)
+# date = datetime.today()
+# newdate = date.replace(hour=2, minute=12, second=0)
 # print(newdate)
 
-@cache.cached(timeout=0, key_prefix='county')
-@sched.scheduled_job('interval', hours=1, next_run_time=newdate)
+@cache.cached(timeout=60, key_prefix='county')
+# @sched.scheduled_job('interval', minutes=1, next_run_time=newdate)
 def getCData():
   cache.clear()
   return getCountyData()
 
-@cache.cached(timeout=0, key_prefix='state')
-@sched.scheduled_job('interval', hours=1, next_run_time=newdate)
+@cache.cached(timeout=60, key_prefix='state')
+# @sched.scheduled_job('interval', minutes=1, next_run_time=newdate)
 def getSData():
   cache.clear()
   return getStateData()
