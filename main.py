@@ -19,7 +19,7 @@ config(app, cache)
 
 sched = BackgroundScheduler(timezone=utc)
 date = datetime.today()
-newdate = date.replace(hour=2, minute=0, second=0)
+newdate = date.replace(hour=2, minute=2, second=0)
 # print(newdate)
 
 @cache.cached(timeout=0, key_prefix='county')
