@@ -10,6 +10,6 @@ states = ["Alabama","Alaska","Arizona","Arkansas","California","Colorado",
 def createBaseDict():
   dic = {}
   for state in states:
-    dic[state] = {}
+    dic[state] = dict()
   
   return dic
