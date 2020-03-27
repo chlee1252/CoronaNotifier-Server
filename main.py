@@ -45,8 +45,8 @@ def main():
 def getCounty(stateName, countyName):
   if not cache.get('county'):
     getCData()
-  data = cache.get('county')[stateName][countyName]
-  return jsonify(data) if data else jsonify(None)
+  data = cache.get('county')[stateName]
+  return jsonify(data[countyName]) if countyName in data else jsonify(None)
 
 @app.route('/getState', methods=['GET'])
 def getState():
