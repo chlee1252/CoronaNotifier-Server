@@ -49,7 +49,7 @@ def getStateData():
     result.append(obj)
   
   total_obj = {
-      'state': 'US(Mainland)',
+      'state': 'US (Mainland)',
       'Confirmed': total_confirmed,
       'New Confirmed': total_newConfirmed,
       'Deaths': total_Deaths,
