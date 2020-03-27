@@ -19,17 +19,17 @@ config(app, cache)
 
 sched = BackgroundScheduler(timezone=utc)
 date = datetime.today()
-newdate = date.replace(hour=1, minute=30, second=2)
-print(newdate)
+newdate = date.replace(hour=2, minute=0, second=0)
+# print(newdate)
 
 @cache.cached(timeout=0, key_prefix='county')
-@sched.scheduled_job('interval', minutes=1, next_run_time=newdate)
+@sched.scheduled_job('interval', hours=1, next_run_time=newdate)
 def getCData():
   cache.clear()
   return getCountyData()
 
 @cache.cached(timeout=0, key_prefix='state')
-@sched.scheduled_job('interval', minutes=1, next_run_time=newdate)
+@sched.scheduled_job('interval', hours=1, next_run_time=newdate)
 def getSData():
   cache.clear()
   return getStateData()
