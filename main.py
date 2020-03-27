@@ -22,13 +22,14 @@ config(app, cache)
 # newdate = date.replace(hour=2, minute=12, second=0)
 # print(newdate)
 
-@cache.cached(timeout=60, key_prefix='county')
+# Delete Cache after 45 minutes
+@cache.cached(timeout=(60*30), key_prefix='county')
 # @sched.scheduled_job('interval', minutes=1, next_run_time=newdate)
 def getCData():
   cache.clear()
   return getCountyData()
 
-@cache.cached(timeout=60, key_prefix='state')
+@cache.cached(timeout=(60*30), key_prefix='state')
 # @sched.scheduled_job('interval', minutes=1, next_run_time=newdate)
 def getSData():
   cache.clear()
