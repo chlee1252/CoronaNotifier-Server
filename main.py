@@ -10,22 +10,26 @@ from county.county import getCountyData
 from cache.cacheConfig import config
 from state.state import getStateData
 
+
+# TODO: Pagination on State
+
 app = Flask(__name__)
 cache = Cache()
 config(app, cache)
 
 sched = BackgroundScheduler(timezone=utc)
 date = datetime.today()
-newdate = date.replace(hour=15, minute=30, second=0)
+newdate = date.replace(hour=1, minute=30, second=2)
+print(newdate)
 
 @cache.cached(timeout=0, key_prefix='county')
-@sched.scheduled_job('interval', minutes=15, next_run_time=newdate)
+@sched.scheduled_job('interval', minutes=30, next_run_time=newdate)
 def getCData():
   cache.clear()
   return getCountyData()
 
 @cache.cached(timeout=0, key_prefix='state')
-@sched.scheduled_job('interval', minutes=15, next_run_time=newdate)
+@sched.scheduled_job('interval', minutes=30, next_run_time=newdate)
 def getSData():
   cache.clear()
   return getStateData()
