@@ -31,7 +31,7 @@ def getStateData():
     newConfirm = int(item['New'])
     deaths = int(item['Death'])
     newDeaths = int(item['New Death'])
-    last = datetime.strptime(last_update, '%Y-%m-%d %H:%M').strftime("%m-%d-%Y %I:%M %p") + ' EDT'
+    last = datetime.strptime(last_update, '%Y-%m-%d %H:%M').strftime("%m-%d-%Y %I:%M%p") + ' EDT'
     obj = {
       'state': state,
       'Confirmed': confirm,
