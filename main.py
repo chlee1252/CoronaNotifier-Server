@@ -2,13 +2,14 @@ import os
 import atexit
 
 from pytz import utc
-from flask import Flask, jsonify
+from flask import Flask, request, jsonify
 # from datetime import datetime
 from flask_caching import Cache
 # from apscheduler.schedulers.background import BackgroundScheduler
-from county.county import getCountyData
+from county.county import getCountyData, getDetailData
 from cache.cacheConfig import config
 from state.state import getStateData
+from pagination.pagination import getPaginatedList
 
 
 # TODO: Pagination on State
@@ -36,10 +37,16 @@ def getSData():
   cache.delete('state')
   return getStateData()
 
+@cache.cached(timeout=(60*30), key_prefix='dataForCountyPage')
+def getCDData():
+  cache.delete('dataForCountyPage')
+  return getDetailData()
+
 @app.route('/')
 def main():
   getCData()
   getSData()
+  getCData()
   return "Welcome to CoronaNotifier API"
   
 @app.route('/getCounty/<stateName>/<countyName>', methods=['GET'])
@@ -53,6 +60,14 @@ def getCounty(stateName, countyName):
 def getState():
   if not cache.get('state'):
     getSData()
+  # data = cache.get('state') # pageination code
+  # return jsonify(getPaginatedList(
+  #   data, 
+  #   '/getState', 
+  #   start=request.args.get('start'), 
+  #   limit=request.args.get('limit')
+  #   )
+  # )
   return jsonify(cache.get('state'))
 
 @app.route('/getTimeHistory/<stateName>/<countyName>', methods=['GET'])
@@ -61,9 +76,19 @@ def getTimeHistory(stateName, countyName):
 
 @app.route('/getStateDetail/<stateName>')
 def getStateDetail(stateName):
-    if not cache.get('county'):
-      getCData()
-    return jsonify(cache.get('county')[stateName])
+    if not cache.get('dataForCountyPage'):
+      getCDData()
+    data = cache.get('dataForCountyPage')
+    
+    # return jsonify(
+    #   getPaginatedList(
+    #     data[stateName],
+    #     '/getStateDetail/%s' % stateName,
+    #     start=request.args.get('start'),
+    #     limit=request.args.get('limit')
+    #   )
+    # )
+    return jsonify(data[stateName])
 
 @app.route('/clearCache')
 def clearCache():

@@ -13,3 +13,10 @@ def createBaseDict():
     dic[state] = dict()
   
   return dic
+
+def createDictList():
+  dic = {}
+  for state in states:
+    dic[state] = []
+  
+  return dic
