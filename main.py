@@ -16,13 +16,14 @@ from state.state import getStateData
 app = Flask(__name__)
 cache = Cache()
 config(app, cache)
+app.config['JSON_SORT_KEYS'] = False
 
 # sched = BackgroundScheduler(timezone=utc)
 # date = datetime.today()
 # newdate = date.replace(hour=2, minute=12, second=0)
 # print(newdate)
 
-# Delete Cache after 45 minutes
+# Delete Cache after 30 minutes
 @cache.cached(timeout=(60*30), key_prefix='county')
 # @sched.scheduled_job('interval', minutes=1, next_run_time=newdate)
 def getCData():

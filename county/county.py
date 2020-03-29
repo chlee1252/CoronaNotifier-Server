@@ -33,11 +33,10 @@ def getCountyData():
       'New Confirmed': int(item['New']),
       'Deaths': int(item['Death']),
       'New Death': int(item['New Death']),
-      'Last Update': datetime.strptime(last_update, '%Y-%m-%d %H:%M').isoformat() + 'EDT',
+      'Last Update': datetime.strptime(last_update, '%Y-%m-%d %H:%M').strftime("%m-%d-%Y %I:%M %p") + ' EDT',
     }
 
     result[state][county] = obj
 
 
   return result
-  
