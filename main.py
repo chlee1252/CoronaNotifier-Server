@@ -27,13 +27,13 @@ app.config['JSON_SORT_KEYS'] = False
 @cache.cached(timeout=(60*30), key_prefix='county')
 # @sched.scheduled_job('interval', minutes=1, next_run_time=newdate)
 def getCData():
-  cache.clear()
+  cache.delete('county')
   return getCountyData()
 
 @cache.cached(timeout=(60*30), key_prefix='state')
 # @sched.scheduled_job('interval', minutes=1, next_run_time=newdate)
 def getSData():
-  cache.clear()
+  cache.delete('state')
   return getStateData()
 
 @app.route('/')
