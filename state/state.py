@@ -75,6 +75,9 @@ def getTimeline():
     keys = list(timeline.keys())[-60:]
     for key in keys:
       newkey = dateutil.parser.isoparse(key).strftime('%m/%d/%y')
-      result.append({newkey: timeline[key]})
+      result.append({
+        'date': newkey,
+        'value': timeline[key]
+      })
   return obj
 
