@@ -8,7 +8,7 @@ from flask_caching import Cache
 # from apscheduler.schedulers.background import BackgroundScheduler
 from county.county import getCountyData, getDetailData
 from cache.cacheConfig import config
-from state.state import getStateData
+from state.state import getStateData, getTimeline
 from pagination.pagination import getPaginatedList
 
 
@@ -29,24 +29,36 @@ app.config['JSON_SORT_KEYS'] = False
 # @sched.scheduled_job('interval', minutes=1, next_run_time=newdate)
 def getCData():
   cache.delete('county')
-  return getCountyData()
+  try:
+    return getCountyData() 
+  except:
+    return None
 
 @cache.cached(timeout=(60*30), key_prefix='state')
 # @sched.scheduled_job('interval', minutes=1, next_run_time=newdate)
 def getSData():
   cache.delete('state')
-  return getStateData()
+  try:
+      return getStateData()
+  except:
+    return None
 
 @cache.cached(timeout=(60*30), key_prefix='dataForCountyPage')
 def getCDData():
   cache.delete('dataForCountyPage')
   return getDetailData()
 
+@cache.cached(timeout=(60*30), key_prefix='timeline')
+def getTimeHistory():
+  cache.delete('timeline')
+  return getTimeline()
+
 @app.route('/')
 def main():
   getCData()
   getSData()
   getCData()
+  getTimeHistory()
   return "Welcome to CoronaNotifier API"
   
 @app.route('/getCounty/<stateName>/<countyName>', methods=['GET'])
@@ -70,9 +82,11 @@ def getState():
   # )
   return jsonify(cache.get('state'))
 
-@app.route('/getTimeHistory/<stateName>/<countyName>', methods=['GET'])
-def getTimeHistory(stateName, countyName):
-  return "This is TimeHistory Panel: Not Implemented."
+@app.route('/getTimeHistory', methods=['GET'])
+def getTime():
+  if not cache.get('timeline'):
+    getTimeHistory()
+  return jsonify(cache.get('timeline'))
 
 @app.route('/getStateDetail/<stateName>')
 def getStateDetail(stateName):
@@ -89,6 +103,10 @@ def getStateDetail(stateName):
     #   )
     # )
     return jsonify(data[stateName])
+
+@app.route('/get30Day')
+def get30DayData():
+  return
 
 @app.route('/clearCache')
 def clearCache():

@@ -1,6 +1,8 @@
 import requests
 import csv
 from datetime import datetime
+import urllib.request, json 
+import dateutil.parser
 
 from .statename import createBaseDict, states
 
@@ -60,3 +62,19 @@ def getStateData():
 
 
   return result
+
+def getTimeline():
+  uri = 'https://coronavirus-tracker-api.herokuapp.com/v2/locations/225'
+  obj = {'US': []}
+  with urllib.request.urlopen(uri) as url:
+    data = json.loads(url.read().decode())
+    
+    timeline = data['location']['timelines']['confirmed']['timeline']
+
+    result = obj['US']
+    keys = list(timeline.keys())[-60:]
+    for key in keys:
+      newkey = dateutil.parser.isoparse(key).strftime('%m/%d/%y')
+      result.append({newkey: timeline[key]})
+  return obj
+
