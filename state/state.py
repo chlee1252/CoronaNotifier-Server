@@ -73,7 +73,7 @@ def getTimeline():
     death = data['location']['timelines']['deaths']['timeline']
     
     result = obj['US']
-    keys = list(affected.keys())[-60:]
+    keys = list(affected.keys())[-30:]
     for key in keys:
       newkey = dateutil.parser.isoparse(key).strftime('%m/%d/%Y')
       result.append({
