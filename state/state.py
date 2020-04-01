@@ -75,7 +75,7 @@ def getTimeline():
     result = obj['US']
     keys = list(affected.keys())[-60:]
     for key in keys:
-      newkey = dateutil.parser.isoparse(key).strftime('%m/%d/%y')
+      newkey = dateutil.parser.isoparse(key).strftime('%m/%d/%Y')
       result.append({
         'date': newkey,
         'affected': affected[key],
