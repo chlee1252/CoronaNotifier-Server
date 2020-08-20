@@ -80,8 +80,8 @@ def getTimeline():
     date = datetime.strptime(item['date'], '%Y%m%d').strftime('%m/%d/%Y')
     result.append({
       'date': date,
-      'affected': item['positiveIncrease'],
-      'deaths': item['deathIncrease']
+      'affected': int(item['positiveIncrease']),
+      'deaths': int(item['deathIncrease']),
     })
   
   return result
