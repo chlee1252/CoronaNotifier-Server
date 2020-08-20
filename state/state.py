@@ -70,12 +70,11 @@ def getTimeline():
   if request.status_code != 200:
     raise "REQUEST STATUS CODE EXCEPTION"
   
-  obj = {'US':[]}
   text = request.text
   # Getter last 60 days
   data = list(csv.DictReader(text.splitlines()))[:60][::-1]
 
-  result = obj['US']
+  result = []
   for item in data:
     date = datetime.strptime(item['date'], '%Y%m%d').strftime('%m/%d/%Y')
     result.append({
