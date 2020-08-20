@@ -64,21 +64,26 @@ def getStateData():
   return result
 
 def getTimeline():
-  uri = 'https://coronavirus-tracker-api.herokuapp.com/v2/locations/225'
-  obj = {'US': []}
-  with urllib.request.urlopen(uri) as url:
-    data = json.loads(url.read().decode())
-    
-    affected = data['location']['timelines']['confirmed']['timeline']
-    death = data['location']['timelines']['deaths']['timeline']
-    
-    result = obj['US']
-    keys = list(affected.keys())[-30:]
-    for key in keys:
-      newkey = dateutil.parser.isoparse(key).strftime('%m/%d/%Y')
-      result.append({
-        'date': newkey,
-        'affected': affected[key],
-        'deaths': death[key]
-      })
-  return obj
+  uri = 'https://covidtracking.com/api/v1/us/daily.csv'
+
+  request = requests.get(uri)
+  if request.status_code != 200:
+    raise "REQUEST STATUS CODE EXCEPTION"
+  
+  obj = {'US':[]}
+  text = request.text
+  # Getter last 60 days
+  data = list(csv.DictReader(text.splitlines()))[:60][::-1]
+
+  result = obj['US']
+  for item in data:
+    date = datetime.strptime(item['date'], '%Y%m%d').strftime('%m/%d/%Y')
+    result.append({
+      'date': date,
+      'affected': item['positiveIncrease'],
+      'deaths': item['deathIncrease']
+    })
+  
+  return result
+
+
