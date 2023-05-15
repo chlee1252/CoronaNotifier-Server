@@ -4,7 +4,7 @@ flask
 gunicorn
 Flask-Caching==1.4.0
 pylibmc==1.5.2
-Werkzeug==0.16.0
+Werkzeug==2.2.3
 python-dateutil
 
 # apscheduler
